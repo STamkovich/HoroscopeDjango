@@ -1,4 +1,4 @@
-from django.http import HttpResponse, HttpResponseNotFound
+from django.http import HttpResponse, HttpResponseNotFound, HttpResponseRedirect
 
 # Create your views here.
 
@@ -19,6 +19,7 @@ zodiac_dict = {
 
 
 def get_info_about_sign_zodiac(request, sign_zodiac):
+    # конвертация в словарь
     description = zodiac_dict.get(sign_zodiac)
     if description:
         return HttpResponse(description)
@@ -27,4 +28,8 @@ def get_info_about_sign_zodiac(request, sign_zodiac):
 
 
 def get_info_about_sign_zodiac_by_number(request, sign_zodiac):
-    return HttpResponse(f'This is number {sign_zodiac}')
+    zodiacs = list(zodiac_dict)
+    if sign_zodiac > len(zodiacs):
+        return HttpResponseNotFound(f'Передан неправильный порядковый номер знака зодиака - {sign_zodiac}')
+    # Class Redirect - перенаправление адреса
+    return HttpResponseRedirect(f'/horoscope/{zodiacs[sign_zodiac-1]}')
