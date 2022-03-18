@@ -1,4 +1,5 @@
 from django.http import HttpResponse, HttpResponseNotFound, HttpResponseRedirect
+from django.urls import reverse
 
 # Create your views here.
 
@@ -17,12 +18,62 @@ zodiac_dict = {
     'pisces': 'Рыбы - двенадцатый знак зодиака, планеты Юпитер (с 20 февраля по 20 марта).',
 }
 
+disaster_zodiac_dict = {'fire': ['aries', 'leo', 'sagittarius'],
+                        'earth': ['taurus', 'virgo', 'capricorn'],
+                        'air': ['gemini', 'libra', 'aquarius'],
+                        'water': ['cancer', 'scorpio', 'pisces']
+
+                        }
+
+
+def index(request):
+    zodiacs = list(zodiac_dict)
+    li_elements = ''
+    for sign in zodiacs:
+        redirect_path = reverse("horoscope_name", args=[sign])
+        li_elements += f"<li> <a href='{redirect_path}'>{sign.title()}</a> </li>"
+    response = f'''
+    <ul>
+    {li_elements}
+    </ul>
+    '''
+    return HttpResponse(response)
+
+
+def disaster_choice(request):
+    disasters = list(disaster_zodiac_dict)
+    li_disaster = ''
+    for dis in disasters:
+        redirect_path = reverse('desic_name', args=[dis])
+        li_disaster += f"<li> <a href='{redirect_path}'>{dis.title()}</a> </li>"
+    response1 = f'''
+        <ul>
+        {li_disaster}
+        </ul>
+        '''
+    return HttpResponse(response1)
+
+
+def type_description(request, type_des):
+    choice_type_des = disaster_zodiac_dict.get(type_des)
+    if choice_type_des:
+        zodiac_list = ''
+        for el in disaster_zodiac_dict[type_des]:
+            redirect_path = reverse("horoscope_name", args=[el])
+            zodiac_list += f"<li> <a href='{redirect_path}'>{el.title()}</a> </li>"
+        response2 = f'''
+            <ul>
+            {zodiac_list}
+            </ul>
+            '''
+        return HttpResponse(response2)
+
 
 def get_info_about_sign_zodiac(request, sign_zodiac):
     # конвертация в словарь
     description = zodiac_dict.get(sign_zodiac)
     if description:
-        return HttpResponse(description)
+        return HttpResponse(f'<h2>{description}</h2>')
     else:
         return HttpResponseNotFound(f'{sign_zodiac} такого знака зодиака не существует')
 
@@ -31,5 +82,10 @@ def get_info_about_sign_zodiac_by_number(request, sign_zodiac):
     zodiacs = list(zodiac_dict)
     if sign_zodiac > len(zodiacs):
         return HttpResponseNotFound(f'Передан неправильный порядковый номер знака зодиака - {sign_zodiac}')
+    name_zodiac = zodiacs[sign_zodiac - 1]
+    redirect_url = reverse("horoscope_name", args=(name_zodiac,))  # функция реверс
     # Class Redirect - перенаправление адреса
-    return HttpResponseRedirect(f'/horoscope/{zodiacs[sign_zodiac-1]}')
+    return HttpResponseRedirect(redirect_url)
+
+
+def get_info_by_data(request, month, day):
