@@ -1,5 +1,6 @@
 from django.http import HttpResponse, HttpResponseNotFound, HttpResponseRedirect
 from django.urls import reverse
+from django.template.loader import render_to_string
 
 # Create your views here.
 
@@ -24,6 +25,10 @@ disaster_zodiac_dict = {'fire': ['aries', 'leo', 'sagittarius'],
                         'water': ['cancer', 'scorpio', 'pisces']
 
                         }
+
+
+def get_mu_float_converters(request, sign_zodiac):
+    return HttpResponse(f'Вы передали вещественное число - {sign_zodiac}')
 
 
 def index(request):
@@ -71,11 +76,9 @@ def type_description(request, type_des):
 
 def get_info_about_sign_zodiac(request, sign_zodiac):
     # конвертация в словарь
-    description = zodiac_dict.get(sign_zodiac)
-    if description:
-        return HttpResponse(f'<h2>{description}</h2>')
-    else:
-        return HttpResponseNotFound(f'{sign_zodiac} такого знака зодиака не существует')
+    description = zodiac_dict.get(sign_zodiac, None)
+    response = render_to_string('horoscope/info_zodiac.html')
+    return HttpResponse(response)
 
 
 def get_info_about_sign_zodiac_by_number(request, sign_zodiac):
@@ -86,6 +89,3 @@ def get_info_about_sign_zodiac_by_number(request, sign_zodiac):
     redirect_url = reverse("horoscope_name", args=(name_zodiac,))  # функция реверс
     # Class Redirect - перенаправление адреса
     return HttpResponseRedirect(redirect_url)
-
-
-def get_info_by_data(request, month, day):
