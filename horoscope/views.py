@@ -1,6 +1,7 @@
+from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseNotFound, HttpResponseRedirect
 from django.urls import reverse
-from django.template.loader import render_to_string
+
 
 # Create your views here.
 
@@ -74,11 +75,8 @@ def type_description(request, type_des):
         return HttpResponse(response2)
 
 
-def get_info_about_sign_zodiac(request, sign_zodiac):
-    # конвертация в словарь
-    description = zodiac_dict.get(sign_zodiac, None)
-    response = render_to_string('horoscope/info_zodiac.html')
-    return HttpResponse(response)
+def get_info_about_sign_zodiac(request):
+    return render(request, 'horoscope/info_zodiac.html')
 
 
 def get_info_about_sign_zodiac_by_number(request, sign_zodiac):
