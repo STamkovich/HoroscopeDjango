@@ -33,17 +33,12 @@ def get_mu_float_converters(request, sign_zodiac):
 
 
 def index(request):
+    # li_elements += f"<li> <a href='{redirect_path}'>{sign.title()}</a> </li>"
     zodiacs = list(zodiac_dict)
-    li_elements = ''
-    for sign in zodiacs:
-        redirect_path = reverse("horoscope_name", args=[sign])
-        li_elements += f"<li> <a href='{redirect_path}'>{sign.title()}</a> </li>"
-    response = f'''
-    <ul>
-    {li_elements}
-    </ul>
-    '''
-    return HttpResponse(response)
+    context = {
+        "zodiacs": zodiacs,
+    }
+    return render(request, 'horoscope/index.html', context=context)
 
 
 def disaster_choice(request):
@@ -75,8 +70,13 @@ def type_description(request, type_des):
         return HttpResponse(response2)
 
 
-def get_info_about_sign_zodiac(request):
-    return render(request, 'horoscope/info_zodiac.html')
+def get_info_about_sign_zodiac(request, sign_zodiac):
+    description = zodiac_dict.get(sign_zodiac)
+    data = {
+        'description_zodiac': description,
+        'sign': sign_zodiac,
+    }
+    return render(request, 'horoscope/info_zodiac.html', context=data)
 
 
 def get_info_about_sign_zodiac_by_number(request, sign_zodiac):

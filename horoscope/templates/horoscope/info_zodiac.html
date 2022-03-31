@@ -1,11 +1,19 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Гороскоп</title>
-</head>
-<body>
-    <h1>Приложение гороскоп</h1>
-    <h2>Телец - второй знак зодиака, планета Венера (с 21 апреля по 21 мая).</h2>
-</body>
-</html>
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block css_additional %}
+    <link rel="stylesheet" href="{% static 'horoscope/css/info.css' %}">
+{% endblock %}
+
+
+{% block title %} Гороскоп для {{ sign|title }} {% endblock %}
+
+{% block content %}
+    {% include "includes/navbar.html" %}
+    {% if description_zodiac is None %}
+        <h1>Неправильный знак зодиака - {{ sign|upper }}</h1>
+    {% else %}
+        <h1>{{ description_zodiac }}</h1>
+    {% endif %}
+{% endblock %}
