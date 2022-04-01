@@ -72,7 +72,10 @@ def type_description(request, type_des):
 
 def get_info_about_sign_zodiac(request, sign_zodiac):
     description = zodiac_dict.get(sign_zodiac)
+    zodiacs = list(zodiac_dict)
     data = {
+        'zodiacs': zodiacs,
+        'sign_name': description.split()[0],
         'description_zodiac': description,
         'sign': sign_zodiac,
     }
