@@ -1,8 +1,10 @@
+{% load my_filter %}
+
 <nav>
     <a href={% url 'horoscope-index' %}>Главная</a>
     <a href="https://www.homeenglish.ru/OtherGoroscop.htm">Источник</a>
-    {% for zodiac in zodiacs %}
-    <a href="{% url 'horoscope_name' sign_zodiac=zodiac %}">{{ zodiac|title }}</a>
+    {% for zodiac,description_zodiacs in zodiacs.items %}
+    <a href="{% url 'horoscope_name' sign_zodiac=zodiac %}">{{ description_zodiacs|split|first }}</a>
     {% endfor %}
 </nav>
 
